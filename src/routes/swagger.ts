@@ -1,6 +1,6 @@
 import { Express } from "express";
-import swaggerJsdoc from "swagger-jsdoc";
-import swaggerUi from "swagger-ui-express";
+import * as swaggerJsdoc from "swagger-jsdoc";
+import * as swaggerUi from "swagger-ui-express";
 
 export function initSwagger(app: Express) {
   const swaggerDefinition = {
