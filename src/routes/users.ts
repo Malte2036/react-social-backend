@@ -5,20 +5,51 @@ import { User } from "../entity/User";
 export function usersController(app: Express, connection: Connection) {
   /**
    * @swagger
-   * /users:
-   *   get:
-   *     summary: Get all users
+   * /user/:
+   *   post:
+   *     summary: Create a new user
+   *     consumes:
+   *       - application/json
    *     tags:
    *      - Users
-   *     produces:
-   *      - application/json
+   *     parameters:
+   *       - in: body
+   *         name: user
+   *         description: The user to create.
+   *         schema:
+   *           type: object
+   *           required:
+   *             - name
+   *             - email
+   *             - password
+   *           properties:
+   *             name:
+   *               type: string
+   *             email:
+   *               type: string
+   *             password:
+   *               type: string
    *     responses:
+   *       405:
+   *         description: Invalid input
+   *         content: {}
    *       200:
-   *         description: user list
+   *         description: user object
    */
-  app.get("/users", async (req, res) => {
-    const users = await connection.manager.find(User);
-    return res.json(users);
+  app.post("/user/", async (req, res) => {
+    console.log(req.body);
+    let user: User;
+    try {
+      user = new User();
+      user.name = req.body.name;
+      user.email = req.body.email;
+      user.password = "123456789";
+    } catch (error) {
+      res.status(400).end();
+    }
+
+    await connection.manager.save<User>(user);
+    res.status(200).end();
   });
 
   /**
@@ -54,5 +85,23 @@ export function usersController(app: Express, connection: Connection) {
       return res.status(404).end();
     }
     return res.json(users[0]);
+  });
+
+  /**
+   * @swagger
+   * /users:
+   *   get:
+   *     summary: Get all users
+   *     tags:
+   *      - Users
+   *     produces:
+   *      - application/json
+   *     responses:
+   *       200:
+   *         description: user list
+   */
+  app.get("/users", async (req, res) => {
+    const users = await connection.manager.find(User);
+    return res.json(users);
   });
 }
