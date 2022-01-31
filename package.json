@@ -1,0 +1,24 @@
+{
+    "name": "react-social-backend",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/index.js",
+    "scripts": {
+        "start": "nodemon lib/index.ts",
+        "build": "tsc"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "dotenv": "^10.0.0",
+        "express": "^4.17.2"
+    },
+    "devDependencies": {
+        "@types/express": "^4.17.13",
+        "@types/node": "^17.0.2",
+        "@types/typescript": "^2.0.0",
+        "nodemon": "^2.0.15",
+        "ts-node": "^10.4.0",
+        "typescript": "^4.5.4"
+    }
+}
