@@ -11,7 +11,7 @@ export function initSwagger(app: Express) {
   };
   const options = {
     swaggerDefinition,
-    apis: [`${__dirname}/index.ts`],
+    apis: [`${__dirname}/*.ts`],
   };
   const swaggerSpec = swaggerJsdoc(options);
 

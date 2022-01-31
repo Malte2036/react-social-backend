@@ -2,8 +2,10 @@ import * as dotenv from "dotenv";
 import * as express from "express";
 import { initSwagger } from "./swagger";
 import "reflect-metadata";
+import { Connection } from "typeorm";
+import { usersController } from "./users";
 
-export default function routes() {
+export default function routes(connection: Connection) {
   dotenv.config();
 
   const app = express();
@@ -11,22 +13,7 @@ export default function routes() {
 
   initSwagger(app);
 
-  /**
-   * @swagger
-   * /test:
-   *   get:
-   *     description: Returns test data
-   *     tags:
-   *      - Test
-   *     produces:
-   *      - application/json
-   *     responses:
-   *       200:
-   *         description: test data
-   */
-  app.get("/test", (req, res) => {
-    return res.json({ id: 123456789, test: "test", test2: "test2" });
-  });
+  usersController(app, connection);
 
   app.listen(PORT, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${PORT}/`);
