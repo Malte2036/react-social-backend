@@ -15,6 +15,7 @@ export function usersController(app: Express, connection: Connection) {
    *     parameters:
    *       - in: body
    *         name: user
+   *         required: true
    *         description: The user to create.
    *         schema:
    *           type: object
