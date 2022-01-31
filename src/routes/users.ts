@@ -38,7 +38,6 @@ export function usersController(app: Express, connection: Connection) {
    *         description: user object
    */
   app.post("/user/", async (req, res) => {
-    console.log(req.body);
     let user: User;
     try {
       user = new User();
@@ -50,7 +49,8 @@ export function usersController(app: Express, connection: Connection) {
     }
 
     await connection.manager.save<User>(user);
-    res.status(200).end();
+
+    res.status(200).json(user);
   });
 
   /**
