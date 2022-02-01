@@ -8,6 +8,15 @@ export function initSwagger(app: Express) {
       title: "React Social Backend",
       version: "1.0.0",
     },
+    securityDefinitions: {
+      bearerAuth: {
+        type: "apiKey",
+        name: "x-auth-token",
+        scheme: "bearer",
+        in: "header",
+      },
+    },
+    security: [{ bearerAuth: [] }],
   };
   const options = {
     swaggerDefinition,
