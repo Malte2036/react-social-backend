@@ -6,6 +6,7 @@ import { Connection } from "typeorm";
 import { usersController } from "./users";
 import bodyParser = require("body-parser");
 import { authController } from "./auth";
+import * as cors from "cors";
 
 export default function routes(connection: Connection) {
   dotenv.config();
@@ -15,6 +16,7 @@ export default function routes(connection: Connection) {
 
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
+  app.use(cors());
 
   initSwagger(app);
 
