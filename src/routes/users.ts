@@ -1,10 +1,34 @@
 import { Connection } from "typeorm";
 import { Express } from "express";
 import { User } from "../entity/User";
-import { authenticateToken } from "../services/authService";
-import { userToShortUser } from "../services/userService";
+import { authenticateToken, CustomRequest } from "../services/authService";
+import { findUserByEmail, userToShortUser } from "../services/userService";
 
 export function usersController(app: Express, connection: Connection) {
+  /**
+   * @swagger
+   * /user:
+   *   get:
+   *     summary: Get current user
+   *     tags:
+   *      - Users
+   *     produces:
+   *      - application/json
+   *     responses:
+   *       200:
+   *         description: user
+   */
+  app.get("/user", authenticateToken, async (req: CustomRequest, res) => {
+    if (!req.email) {
+      return res.sendStatus(500);
+    }
+
+    let user = await findUserByEmail(connection, req.email);
+    user = userToShortUser(user);
+
+    return res.json(user);
+  });
+
   /**
    * @swagger
    * /user/{userId}:
