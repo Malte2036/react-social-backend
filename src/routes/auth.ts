@@ -34,9 +34,10 @@ export function authController(app: Express, connection: Connection) {
    *     responses:
    *       405:
    *         description: Invalid input
-   *         content: {}
+   *       406:
+   *         description: Account already exists
    *       200:
-   *         description: token
+   *         description: 
    */
   app.post("/auth/register", async (req, res) => {
     if (
@@ -44,10 +45,15 @@ export function authController(app: Express, connection: Connection) {
       req.body.name === undefined ||
       req.body.password === undefined
     ) {
-      return res.sendStatus(500);
+      return res.status(405).send("Invalid input!");
     }
-    console.log("register");
-    const user = await registerUser(
+
+    let user = await findUserByEmail(connection, req.body.email);
+    if (user !== undefined) {
+      return res.status(406).send("Account already exists!");
+    }
+
+    user = await registerUser(
       connection,
       req.body.email,
       req.body.name,
@@ -84,13 +90,13 @@ export function authController(app: Express, connection: Connection) {
    *               type: string
    *     responses:
    *       200:
-   *         description: 
+   *         description:
    *       403:
-   *         description: 
+   *         description:
    *       404:
-   *         description: 
+   *         description:
    *       500:
-   *         description: 
+   *         description:
    */
   app.post("/auth/login", async (req, res) => {
     if (req.body.email === undefined || req.body.password === undefined) {
