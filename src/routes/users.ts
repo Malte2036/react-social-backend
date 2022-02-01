@@ -1,6 +1,7 @@
 import { Connection } from "typeorm";
 import { Express } from "express";
 import { User } from "../entity/User";
+import { authenticateToken } from "../services/authService";
 
 export function usersController(app: Express, connection: Connection) {
   /**
@@ -37,7 +38,7 @@ export function usersController(app: Express, connection: Connection) {
    *       200:
    *         description: user object
    */
-  app.post("/user/", async (req, res) => {
+  app.post("/user/", authenticateToken, async (req, res) => {
     let user: User;
     try {
       user = new User();
@@ -74,7 +75,7 @@ export function usersController(app: Express, connection: Connection) {
    *       200:
    *         description: user
    */
-  app.get("/user/:userId", async (req, res) => {
+  app.get("/user/:userId", authenticateToken, async (req, res) => {
     const userId = req.params.userId;
     if (userId === undefined) {
       return res.status(400).end();
@@ -101,7 +102,7 @@ export function usersController(app: Express, connection: Connection) {
    *       200:
    *         description: user list
    */
-  app.get("/users", async (req, res) => {
+  app.get("/users", authenticateToken, async (req, res) => {
     const users = await connection.manager.find(User);
     return res.json(users);
   });

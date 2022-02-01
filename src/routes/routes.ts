@@ -5,6 +5,7 @@ import "reflect-metadata";
 import { Connection } from "typeorm";
 import { usersController } from "./users";
 import bodyParser = require("body-parser");
+import { authController } from "./auth";
 
 export default function routes(connection: Connection) {
   dotenv.config();
@@ -17,6 +18,7 @@ export default function routes(connection: Connection) {
 
   initSwagger(app);
 
+  authController(app, connection);
   usersController(app, connection);
 
   app.listen(PORT, () => {
