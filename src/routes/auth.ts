@@ -109,7 +109,7 @@ export function authController(app: Express, connection: Connection) {
     }
     const valid = await compareHash(user.password, req.body.password);
     if (!valid) {
-      return res.sendStatus(403);
+      return res.status(403).send("Password invalid");
     }
 
     const token = generateAccessToken(req.body.email as string);

@@ -30,8 +30,7 @@ export function usersController(app: Express, connection: Connection) {
     if (userId === undefined) {
       return res.status(400).end();
     }
-    console.log(userId);
-
+    
     const users = await connection.manager.findByIds(User, [userId]);
     if (users.length == 0) {
       return res.status(404).end();
