@@ -2,6 +2,7 @@ import { Connection } from "typeorm";
 import { Express } from "express";
 import { User } from "../entity/User";
 import { authenticateToken } from "../services/authService";
+import { userToShortUser } from "../services/userService";
 
 export function usersController(app: Express, connection: Connection) {
   /**
@@ -30,12 +31,13 @@ export function usersController(app: Express, connection: Connection) {
     if (userId === undefined) {
       return res.status(400).end();
     }
-    
+
     const users = await connection.manager.findByIds(User, [userId]);
     if (users.length == 0) {
       return res.status(404).end();
     }
-    return res.json(users[0]);
+    const user = userToShortUser(users[0]);
+    return res.json(user);
   });
 
   /**
@@ -52,7 +54,8 @@ export function usersController(app: Express, connection: Connection) {
    *         description: user list
    */
   app.get("/users", authenticateToken, async (req, res) => {
-    const users = await connection.manager.find(User);
+    let users = await connection.manager.find(User);
+    users = users.map((user) => userToShortUser(user));
     return res.json(users);
   });
 }

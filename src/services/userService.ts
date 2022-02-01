@@ -26,3 +26,7 @@ export async function findUserByEmail(
     where: { email: email },
   });
 }
+
+export function userToShortUser(user: User) {
+  return { ...user, password: undefined };
+}

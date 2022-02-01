@@ -1,7 +1,11 @@
 import { Connection } from "typeorm";
 import { Express } from "express";
 import { generateAccessToken } from "../services/authService";
-import { findUserByEmail, registerUser } from "../services/userService";
+import {
+  findUserByEmail,
+  registerUser,
+  userToShortUser,
+} from "../services/userService";
 import { compareHash } from "../services/hash";
 
 export function authController(app: Express, connection: Connection) {
@@ -37,7 +41,7 @@ export function authController(app: Express, connection: Connection) {
    *       406:
    *         description: Account already exists
    *       200:
-   *         description: 
+   *         description:
    */
   app.post("/auth/register", async (req, res) => {
     if (
@@ -59,6 +63,8 @@ export function authController(app: Express, connection: Connection) {
       req.body.name,
       req.body.password
     );
+
+    user = userToShortUser(user);
 
     const token = generateAccessToken(user.email as string);
 
@@ -103,7 +109,7 @@ export function authController(app: Express, connection: Connection) {
       return res.sendStatus(500);
     }
 
-    const user = await findUserByEmail(connection, req.body.email);
+    let user = await findUserByEmail(connection, req.body.email);
     if (user === undefined) {
       return res.sendStatus(404);
     }
@@ -111,6 +117,8 @@ export function authController(app: Express, connection: Connection) {
     if (!valid) {
       return res.status(403).send("Password invalid");
     }
+
+    user = userToShortUser(user);
 
     const token = generateAccessToken(req.body.email as string);
     res.status(200).json({ token: token, user: user });
