@@ -6,56 +6,6 @@ import { authenticateToken } from "../services/authService";
 export function usersController(app: Express, connection: Connection) {
   /**
    * @swagger
-   * /user/:
-   *   post:
-   *     summary: Create a new user
-   *     consumes:
-   *       - application/json
-   *     tags:
-   *      - Users
-   *     parameters:
-   *       - in: body
-   *         name: user
-   *         required: true
-   *         description: The user to create.
-   *         schema:
-   *           type: object
-   *           required:
-   *             - name
-   *             - email
-   *             - password
-   *           properties:
-   *             name:
-   *               type: string
-   *             email:
-   *               type: string
-   *             password:
-   *               type: string
-   *     responses:
-   *       405:
-   *         description: Invalid input
-   *         content: {}
-   *       200:
-   *         description: user object
-   */
-  app.post("/user/", authenticateToken, async (req, res) => {
-    let user: User;
-    try {
-      user = new User();
-      user.name = req.body.name;
-      user.email = req.body.email;
-      user.password = "123456789";
-    } catch (error) {
-      res.status(400).end();
-    }
-
-    await connection.manager.save<User>(user);
-
-    res.status(200).json(user);
-  });
-
-  /**
-   * @swagger
    * /user/{userId}:
    *   get:
    *     summary: Find user by id
