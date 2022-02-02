@@ -7,6 +7,7 @@ import { usersController } from "./users";
 import bodyParser = require("body-parser");
 import { authController } from "./auth";
 import * as cors from "cors";
+import { postsController } from "./posts";
 
 export default function routes(connection: Connection) {
   dotenv.config();
@@ -22,6 +23,7 @@ export default function routes(connection: Connection) {
 
   authController(app, connection);
   usersController(app, connection);
+  postsController(app, connection);
 
   app.listen(PORT, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${PORT}/`);

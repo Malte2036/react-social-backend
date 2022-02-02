@@ -14,6 +14,7 @@ export async function registerUser(
   user.name = name;
   user.email = email;
   user.password = passwordHash;
+  user.posts = [];
 
   return await connection.manager.save<User>(user);
 }
@@ -24,6 +25,7 @@ export async function findUserByEmail(
 ): Promise<User | undefined> {
   return await connection.getRepository(User).findOne({
     where: { email: email },
+    relations: ['posts']
   });
 }
 
