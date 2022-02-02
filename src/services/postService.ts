@@ -26,8 +26,24 @@ export async function createPost(
 
 export async function getAllPosts(connection: Connection) {
   let posts = await connection.manager.find(Post, { relations: ["creator"] });
-  posts = posts.map((post) => {
-    return { ...post, creator: userToShortUser(post.creator) };
-  });
+  posts = posts.map((post) => postToShortPost(post));
   return posts;
+}
+
+export async function findPostById(
+  connection: Connection,
+  postId: string
+): Promise<Post | null> {
+  try {
+    const post = await connection.manager.findOne(Post, {
+      where: { id: postId },
+      relations: ["creator"],
+    });
+    return postToShortPost(post);
+  } catch (error) {}
+  return null;
+}
+
+export function postToShortPost(post: Post) {
+  return { ...post, creator: userToShortUser(post.creator) };
 }
