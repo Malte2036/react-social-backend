@@ -1,17 +1,24 @@
 import { Connection } from "typeorm";
 import { Post } from "../entity/Post";
 import { User } from "../entity/User";
+import { createFile } from "./fileService";
 import { userToShortUser } from "./userService";
 
 export async function createPost(
   connection: Connection,
   message: string,
-  creator: User
+  creator: User,
+  image?: any
 ) {
   const post = new Post();
   post.message = message;
   post.creator = creator;
   post.date = new Date();
+
+  if (image) {
+    const file = await createFile(connection, image, creator);
+    post.image = file;
+  }
 
   if (!creator.posts) {
     creator.posts = [post];
@@ -25,7 +32,9 @@ export async function createPost(
 }
 
 export async function getAllPosts(connection: Connection) {
-  let posts = await connection.manager.find(Post, { relations: ["creator"] });
+  let posts = await connection.manager.find(Post, {
+    relations: ["creator", "image"],
+  });
   posts = posts.map((post) => postToShortPost(post));
   return posts;
 }
@@ -37,7 +46,7 @@ export async function findPostById(
   try {
     const post = await connection.manager.findOne(Post, {
       where: { id: postId },
-      relations: ["creator"],
+      relations: ["creator", "image"],
     });
     return postToShortPost(post);
   } catch (error) {}

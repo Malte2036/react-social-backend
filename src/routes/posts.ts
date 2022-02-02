@@ -3,6 +3,7 @@ import { Express } from "express";
 import { authenticateToken, CustomRequest } from "../services/authService";
 import { findUserByEmail } from "../services/userService";
 import { createPost, findPostById, getAllPosts } from "../services/postService";
+import { createFile } from "../services/fileService";
 
 export function postsController(app: Express, connection: Connection) {
   /**
@@ -61,9 +62,18 @@ export function postsController(app: Express, connection: Connection) {
       return res.sendStatus(404);
     }
 
-    const post = createPost(connection, req.body.message, user);
+    let imageData = undefined;
+    if (req.body.image !== undefined) {
+      imageData = {
+        name: req.body.image.name,
+        data: req.body.image.data,
+        mimeType: req.body.image.mimeType,
+      };
+    }
 
-    res.status(200).json(post);
+    createPost(connection, req.body.message, user, imageData);
+
+    res.sendStatus(200);
   });
 
   /**

@@ -15,6 +15,7 @@ export async function registerUser(
   user.email = email;
   user.password = passwordHash;
   user.posts = [];
+  user.files = [];
 
   return await connection.manager.save<User>(user);
 }
