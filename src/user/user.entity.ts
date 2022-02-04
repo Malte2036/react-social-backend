@@ -3,9 +3,11 @@ import Post from 'src/post/post.entity';
 import {
   BeforeInsert,
   Column,
+  CreateDateColumn,
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 
@@ -25,9 +27,19 @@ export default class User {
 
   @Column()
   password: string;
-
+  
   @OneToMany(() => Post, (posts) => posts.creator)
   posts: Post[];
+
+  @ApiProperty()
+  @Column()
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @ApiProperty()
+  @Column()
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @BeforeInsert()
   async hashPassword() {

@@ -13,7 +13,6 @@ export default class PostRepository extends Repository<Post> {
     const post = new Post();
     post.message = createPostDto.message;
     post.creator = creator;
-    post.date = new Date();
 
     this.save(post);
     return post;
