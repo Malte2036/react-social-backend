@@ -4,7 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import Post from './post/post.entity';
 import { PostModule } from './post/post.module';
-import { User } from './user/user.entity';
+import User from './user/user.entity';
 import { UserModule } from './user/user.module';
 
 @Module({
