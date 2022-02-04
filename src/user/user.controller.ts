@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import UserDto from './interfaces/user.dto';
+import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import CreateUserDto from './dto/create-user.dto';
 import User from './user.entity';
 import UserRepository from './user.repository';
 
@@ -11,7 +11,11 @@ export default class UserController {
   constructor(private readonly userService: UserRepository) {}
 
   @Post()
-  async create(@Body() userDto: UserDto): Promise<User> {
-    return await this.userService.createUser(userDto);
+  @ApiCreatedResponse({
+    description: 'The user has been successfully created.',
+    type: User,
+  })
+  async create(@Body() createUserDto: CreateUserDto): Promise<User> {
+    return await this.userService.createUser(createUserDto);
   }
 }

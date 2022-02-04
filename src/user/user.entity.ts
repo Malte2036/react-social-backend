@@ -4,9 +4,11 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export default class User {
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty()
   @Column()
   name: string;
 
@@ -14,7 +16,6 @@ export default class User {
   @Column()
   email: string;
 
-  @ApiProperty()
   @Column()
   password: string;
 

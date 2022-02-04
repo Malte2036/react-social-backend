@@ -1,5 +1,6 @@
+import User from 'src/user/user.entity';
 import { EntityRepository, Repository } from 'typeorm';
-import PostDto from './interfaces/post.dto';
+import CreatePostDto from './dto/create-post.dto';
 import Post from './post.entity';
 
 @EntityRepository(Post)
@@ -8,10 +9,10 @@ export default class PostRepository extends Repository<Post> {
     return this.find();
   }
 
-  async createPost(postDto: PostDto): Promise<Post> {
+  async createPost(createPostDto: CreatePostDto, creator: User): Promise<Post> {
     const post = new Post();
-    post.message = postDto.message;
-    post.creator = null;
+    post.message = createPostDto.message;
+    post.creator = creator;
     post.date = new Date();
 
     this.save(post);
