@@ -1,6 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import Post from 'src/post/post.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import * as bcrypt from 'bcryptjs';
 
 @Entity()
 export default class User {
@@ -21,4 +28,13 @@ export default class User {
 
   @OneToMany(() => Post, (posts) => posts.creator)
   posts: Post[];
+
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 8);
+  }
+
+  async validatePassword(password: string): Promise<boolean> {
+    return bcrypt.compare(password, this.password);
+  }
 }
