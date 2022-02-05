@@ -25,9 +25,9 @@ export default class User {
   @Column()
   email: string;
 
-  @Column()
+  @Column({ select: false })
   password: string;
-  
+
   @OneToMany(() => Post, (posts) => posts.creator)
   posts: Post[];
 

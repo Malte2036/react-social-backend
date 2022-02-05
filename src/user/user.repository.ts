@@ -10,7 +10,10 @@ export default class UserRepository extends Repository<User> {
     user.email = createUserDto.email;
     user.password = createUserDto.password;
 
-    this.save(user);
-    return user;
+    return await this.save(user);
+  }
+
+  async listUsers(): Promise<User[]> {
+    return await this.find();
   }
 }
