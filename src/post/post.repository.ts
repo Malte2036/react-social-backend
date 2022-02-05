@@ -14,7 +14,6 @@ export default class PostRepository extends Repository<Post> {
     post.message = createPostDto.message;
     post.creator = creator;
 
-    this.save(post);
-    return post;
+    return await this.save(post);
   }
 }
