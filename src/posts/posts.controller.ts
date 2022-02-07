@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -23,8 +24,8 @@ export class PostsController {
   @ApiCreatedResponse({
     description: 'The post has been successfully created.',
   })
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.create(createPostDto, undefined);
+  create(@Body() createPostDto: CreatePostDto, @Request() req) {
+    return this.postsService.create(createPostDto, req.user);
   }
 
   @Get()
