@@ -4,6 +4,7 @@ import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 
 type UserOrNull = User | null;
 
@@ -37,6 +38,16 @@ export class AuthService {
     if (user == null) {
       return null;
     }
+
+    const payload = { userId: user.id, userEmail: user.email };
+
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
+  }
+
+  async register(registerDto: RegisterDto) {
+    const user = await this.usersService.create(registerDto);
 
     const payload = { userId: user.id, userEmail: user.email };
 
