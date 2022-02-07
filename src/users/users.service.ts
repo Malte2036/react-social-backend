@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { UsersRepository } from './users.repository';
@@ -15,6 +19,10 @@ export class UsersService {
     email: string;
     password: string;
   }) {
+    if ((await this.findOneByEmail(createUserDto.email)) != null) {
+      throw new ConflictException('User already exists!');
+    }
+
     const user = new User();
     user.name = createUserDto.name;
     user.email = createUserDto.email;
@@ -29,20 +37,31 @@ export class UsersService {
 
   async findOne(id: number): Promise<User | null> {
     const users = await this.usersRepository.findByIds([id]);
-    return users.length != 0 ? users[0] : null;
+    if (users.length == 0) {
+      throw new NotFoundException('User not found');
+    }
+    return users[0];
   }
 
   async findOneByEmail(email: string): Promise<User | null> {
-    return await this.usersRepository.findOne({
+    const user = await this.usersRepository.findOne({
       where: { email: email },
     });
+    if (user == null) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
   }
 
   async findOneWithPasswordByEmail(email: string): Promise<User | null> {
-    return await this.usersRepository.findOne({
+    const user = await this.usersRepository.findOne({
       select: ['id', 'email', 'password'],
       where: { email: email },
     });
+    if (user == null) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
   }
 
   async remove(id: number) {

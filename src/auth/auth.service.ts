@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcryptjs';
@@ -18,7 +22,7 @@ export class AuthService {
   async validateUser(email: string, password: string): Promise<UserOrNull> {
     const user = await this.usersService.findOneWithPasswordByEmail(email);
     if (user == null) {
-      return null;
+      throw new NotFoundException('User not found!');
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -26,7 +30,7 @@ export class AuthService {
     if (user && isMatch) {
       return user;
     }
-    return null;
+    throw new ForbiddenException();
   }
 
   async login(loginDto: LoginDto) {
@@ -34,10 +38,6 @@ export class AuthService {
       loginDto.email,
       loginDto.password,
     );
-
-    if (user == null) {
-      return null;
-    }
 
     const payload = { userId: user.id, userEmail: user.email };
 
