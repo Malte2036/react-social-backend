@@ -29,6 +29,19 @@ export class UsersService {
     return users.length != 0 ? users[0] : null;
   }
 
+  async findOneByEmail(email: string): Promise<User | null> {
+    return await this.usersRepository.findOne({
+      where: { email: email },
+    });
+  }
+
+  async findOneWithPasswordByEmail(email: string): Promise<User | null> {
+    return await this.usersRepository.findOne({
+      select: ['id', 'email', 'password'],
+      where: { email: email },
+    });
+  }
+
   async remove(id: number) {
     return await this.usersRepository.delete(id);
   }
