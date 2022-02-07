@@ -1,6 +1,7 @@
 import {
   ConflictException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -19,16 +20,20 @@ export class UsersService {
     email: string;
     password: string;
   }) {
-    if ((await this.findOneByEmail(createUserDto.email)) != null) {
-      throw new ConflictException('User already exists!');
+    try {
+      await this.findOneByEmail(createUserDto.email);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        const user = new User();
+        user.name = createUserDto.name;
+        user.email = createUserDto.email;
+        user.password = createUserDto.password;
+
+        return await this.usersRepository.save(user);
+      }
+      throw new InternalServerErrorException();
     }
-
-    const user = new User();
-    user.name = createUserDto.name;
-    user.email = createUserDto.email;
-    user.password = createUserDto.password;
-
-    return await this.usersRepository.save(user);
+    throw new ConflictException('User already exists!');
   }
 
   async findAll(): Promise<User[]> {
