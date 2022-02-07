@@ -9,11 +9,12 @@ import {
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
-import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('posts')
 @UseGuards(AuthGuard('jwt'))
+@ApiBearerAuth('token')
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
