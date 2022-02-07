@@ -12,7 +12,7 @@ import * as bcrypt from 'bcryptjs';
 import { Post } from 'src/posts/entities/post.entity';
 
 @Entity()
-export default class User {
+export class User {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
