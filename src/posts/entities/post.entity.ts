@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export default class Post {
+export class Post {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;

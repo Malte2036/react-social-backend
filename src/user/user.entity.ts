@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import Post from 'src/post/post.entity';
 import {
   BeforeInsert,
   Column,
@@ -10,6 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
+import { Post } from 'src/posts/entities/post.entity';
 
 @Entity()
 export default class User {
