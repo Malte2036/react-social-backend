@@ -44,7 +44,12 @@ export class PostsService {
     return posts.length != 0 ? posts[0] : null;
   }
 
-  async remove(id: number) {
+  async delete(id: number) {
+    const post = await this.findOne(id);
+    if (post == null) {
+      return;
+    }
+
     return await this.postsRepository.delete(id);
   }
 }

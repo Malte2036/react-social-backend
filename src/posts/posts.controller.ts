@@ -7,6 +7,8 @@ import {
   Delete,
   UseGuards,
   Req,
+  NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -47,7 +49,15 @@ export class PostsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postsService.remove(+id);
+  async remove(@Param('id') id: string, @Req() req) {
+    const user = await this.usersService.findOne(req.user.userId);
+    const post = await this.postsService.findOne(+id);
+    if (post == null) {
+      throw new NotFoundException('Post not found');
+    }
+    if (post.creator.id != user.id) {
+      throw new UnauthorizedException('You cannot delete this post');
+    }
+    return this.postsService.delete(+id);
   }
 }
