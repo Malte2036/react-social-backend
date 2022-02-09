@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { Post } from 'src/posts/entities/post.entity';
+import { File } from 'src/files/entities/file.entity';
 
 @Entity()
 export class User {
@@ -30,6 +31,9 @@ export class User {
 
   @OneToMany(() => Post, (posts) => posts.creator)
   posts: Post[];
+
+  @OneToMany(() => File, (files) => files.creator)
+  files: File[];
 
   @ApiProperty()
   @Column()
