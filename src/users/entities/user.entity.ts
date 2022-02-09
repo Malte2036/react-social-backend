@@ -4,7 +4,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  JoinTable,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -34,6 +37,10 @@ export class User {
 
   @OneToMany(() => File, (files) => files.creator)
   files: File[];
+
+  @OneToOne(() => File)
+  @JoinColumn()
+  image?: File;
 
   @ApiProperty()
   @Column()

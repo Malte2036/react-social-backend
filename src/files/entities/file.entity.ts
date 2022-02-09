@@ -9,7 +9,7 @@ export class File {
   @Column()
   name: string;
 
-  @Column()
+  @Column('longtext')
   data: Buffer;
 
   @Column()

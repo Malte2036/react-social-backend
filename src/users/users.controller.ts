@@ -1,7 +1,22 @@
-import { Controller, Get, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Delete,
+  UseGuards,
+  Req,
+  Post,
+  Body,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
-import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+import { CreateFileDto } from 'src/files/dto/create-file.dto';
 
 @ApiTags('users')
 @UseGuards(AuthGuard('jwt'))
@@ -13,6 +28,13 @@ export class UsersController {
   @Get('account')
   getAccount(@Req() req) {
     return req.user;
+  }
+
+  @Post('image')
+  @ApiOkResponse()
+  async changeImage(@Body() createfileDto: CreateFileDto, @Req() req) {
+    const user = await this.usersService.findOne(req.user.userId);
+    await this.usersService.changeImage(createfileDto, user);
   }
 
   @Get()

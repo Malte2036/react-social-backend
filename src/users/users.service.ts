@@ -5,6 +5,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreateFileDto } from 'src/files/dto/create-file.dto';
+import { FilesService } from 'src/files/files.service';
 import { User } from './entities/user.entity';
 import { UsersRepository } from './users.repository';
 
@@ -13,6 +15,7 @@ export class UsersService {
   constructor(
     @InjectRepository(UsersRepository)
     private readonly usersRepository: UsersRepository,
+    private readonly filesService: FilesService,
   ) {}
 
   async create(createUserDto: {
@@ -36,12 +39,23 @@ export class UsersService {
     throw new ConflictException('User already exists!');
   }
 
+  async changeImage(createFileDto: CreateFileDto, user: User) {
+    const image = await this.filesService.create(createFileDto, user);
+    user.image = image;
+
+    await this.usersRepository.save(user);
+  }
+
   async findAll(): Promise<User[]> {
-    return await this.usersRepository.find();
+    return await this.usersRepository.find({
+      relations: ['image'],
+    });
   }
 
   async findOne(id: number): Promise<User | null> {
-    const users = await this.usersRepository.findByIds([id]);
+    const users = await this.usersRepository.findByIds([id], {
+      relations: ['image'],
+    });
     if (users.length == 0) {
       throw new NotFoundException('User not found');
     }
@@ -51,6 +65,7 @@ export class UsersService {
   async findOneByEmail(email: string): Promise<User | null> {
     const user = await this.usersRepository.findOne({
       where: { email: email },
+      relations: ['image'],
     });
     if (user == null) {
       throw new NotFoundException('User not found');
