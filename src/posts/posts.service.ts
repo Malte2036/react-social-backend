@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { EventsGateway } from 'src/events.gateway';
 import { User } from 'src/users/entities/user.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { Post } from './entities/post.entity';
@@ -10,6 +11,7 @@ export class PostsService {
   constructor(
     @InjectRepository(PostsRepository)
     private readonly postsRepository: PostsRepository,
+    private readonly eventsGateway: EventsGateway,
   ) {}
 
   async create(createPostDto: CreatePostDto, creator: User) {
@@ -17,7 +19,9 @@ export class PostsService {
     post.message = createPostDto.message;
     post.creator = creator;
 
-    return await this.postsRepository.save(post);
+    await this.postsRepository.save(post);
+    this.eventsGateway.server.emit('posts', post);
+    return post;
   }
 
   async findAll(): Promise<Post[]> {

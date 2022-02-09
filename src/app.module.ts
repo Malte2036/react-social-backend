@@ -25,5 +25,6 @@ import { EventsGateway } from './events.gateway';
   ],
   controllers: [AppController],
   providers: [AppService, EventsGateway],
+  exports: [EventsGateway],
 })
 export class AppModule {}
