@@ -26,8 +26,8 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get('account')
-  getAccount(@Req() req) {
-    return req.user;
+  async getAccount(@Req() req) {
+    return await this.usersService.findOne(req.user.userId);
   }
 
   @Post('image')
