@@ -1,14 +1,12 @@
-version: '3'
+version: '3.3'
 services:
-  database:
-    image: mysql:latest
-    volumes:
-      - "./.mysql-data/db:/var/lib/mysql"
-    restart: always
-    ports:
-      - 3306:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: react-social
-      MYSQL_DATABASE: react-social
-      MYSQL_USER: react-social
-      MYSQL_PASSWORD: react-social
+    mariadb:
+        container_name: react-social
+        environment:
+          - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+          - MARIADB_DATABASE=react-social
+        volumes:
+          - '.mysql-data:/var/lib/mysql'
+        image: 'mariadb:latest'
+        ports:
+          - 3306:3306

@@ -16,8 +16,12 @@ import { File } from './files/entities/file.entity';
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: './database.sqlite',
+      type: 'mariadb',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: process.env.MARIADB_ROOT_PASSWORD,
+      database: 'react-social',
       entities: [User, Post, File],
       synchronize: true,
     }),
