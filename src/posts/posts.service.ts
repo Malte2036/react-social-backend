@@ -32,15 +32,11 @@ export class PostsService {
   }
 
   async findAll(): Promise<Post[]> {
-    return await this.postsRepository.find({
-      relations: ['creator', 'creator.image', 'image'],
-    });
+    return await this.postsRepository.find();
   }
 
   async findOne(id: number): Promise<Post | null> {
-    const posts = await this.postsRepository.findByIds([id], {
-      relations: ['creator', 'creator.image', 'image'],
-    });
+    const posts = await this.postsRepository.findByIds([id]);
     return posts.length != 0 ? posts[0] : null;
   }
 

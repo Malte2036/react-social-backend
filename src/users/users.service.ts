@@ -47,15 +47,11 @@ export class UsersService {
   }
 
   async findAll(): Promise<User[]> {
-    return await this.usersRepository.find({
-      relations: ['image'],
-    });
+    return await this.usersRepository.find();
   }
 
   async findOne(id: number): Promise<User | null> {
-    const users = await this.usersRepository.findByIds([id], {
-      relations: ['image'],
-    });
+    const users = await this.usersRepository.findByIds([id]);
     if (users.length == 0) {
       throw new NotFoundException('User not found');
     }
@@ -65,7 +61,6 @@ export class UsersService {
   async findOneByEmail(email: string): Promise<User | null> {
     const user = await this.usersRepository.findOne({
       where: { email: email },
-      relations: ['image'],
     });
     if (user == null) {
       throw new NotFoundException('User not found');
