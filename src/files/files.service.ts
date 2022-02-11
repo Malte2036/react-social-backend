@@ -20,4 +20,9 @@ export class FilesService {
 
     return await this.filesRepository.save(file);
   }
+
+  async findOne(id: number): Promise<File | null> {
+    const files = await this.filesRepository.findByIds([id]);
+    return files.length != 0 ? files[0] : null;
+  }
 }
