@@ -23,8 +23,16 @@ export class Post {
   message: string;
 
   @ApiProperty()
+  @Column({ nullable: true })
+  creatorId?: number;
+
+  @ApiProperty()
   @ManyToOne(() => User, (user) => user.posts)
   creator: User;
+
+  @ApiProperty()
+  @Column({ nullable: true })
+  imageId: number;
 
   @OneToOne(() => File)
   @JoinColumn()

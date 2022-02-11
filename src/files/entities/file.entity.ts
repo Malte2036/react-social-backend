@@ -15,6 +15,9 @@ export class File {
   @Column()
   mimeType: string;
 
+  @Column({ nullable: true })
+  creatorId: number;
+
   @ManyToOne(() => User, (user) => user.files)
   creator: User;
 }

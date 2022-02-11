@@ -38,9 +38,13 @@ export class User {
   @OneToMany(() => File, (files) => files.creator)
   files: File[];
 
+  @ApiProperty()
+  @Column({ nullable: true })
+  imageId: number;
+
   @OneToOne(() => File)
   @JoinColumn()
-  image?: File;
+  image: File;
 
   @ApiProperty()
   @Column()
