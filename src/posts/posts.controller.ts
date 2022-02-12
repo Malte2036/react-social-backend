@@ -55,7 +55,7 @@ export class PostsController {
     if (post == null) {
       throw new NotFoundException('Post not found');
     }
-    if (post.creator.id != user.id) {
+    if (post.creatorId != user.id) {
       throw new UnauthorizedException('You cannot delete this post');
     }
     return this.postsService.delete(+id);
