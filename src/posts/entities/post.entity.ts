@@ -19,7 +19,7 @@ export class Post {
   id: number;
 
   @ApiProperty()
-  @Column()
+  @Column('longtext')
   message: string;
 
   @ApiProperty()
