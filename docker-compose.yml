@@ -2,6 +2,7 @@ version: '3.3'
 services:
     mariadb:
         container_name: react-social
+        restart: always
         environment:
           - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
           - MARIADB_DATABASE=react-social
