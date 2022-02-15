@@ -50,8 +50,12 @@ export class UsersService {
     return await this.usersRepository.find();
   }
 
-  async findOne(id: number): Promise<User | null> {
-    const users = await this.usersRepository.findByIds([id]);
+  async findOne(id: number, includeEmail?: boolean): Promise<User | null> {
+    const users = includeEmail
+      ? await this.usersRepository.findByIds([id], {
+          select: ['id', 'name', 'email', 'imageId', 'createdAt', 'updatedAt'],
+        })
+      : await this.usersRepository.findByIds([id]);
     if (users.length == 0) {
       throw new NotFoundException('User not found');
     }

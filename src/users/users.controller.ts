@@ -27,7 +27,7 @@ export class UsersController {
 
   @Get('account')
   async getAccount(@Req() req) {
-    return await this.usersService.findOne(req.user.userId);
+    return await this.usersService.findOne(req.user.userId, true);
   }
 
   @Post('image')

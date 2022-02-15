@@ -26,7 +26,7 @@ export class User {
   name: string;
 
   @ApiProperty()
-  @Column()
+  @Column({ select: false })
   email: string;
 
   @Column({ select: false })
