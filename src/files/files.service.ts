@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Cache } from 'cache-manager';
 import { User } from 'src/users/entities/user.entity';
 import { CreateFileDto } from './dto/create-file.dto';
 import { File } from './entities/file.entity';
@@ -10,6 +11,7 @@ export class FilesService {
   constructor(
     @InjectRepository(FilesRepository)
     private readonly filesRepository: FilesRepository,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
   async create(createFileDto: CreateFileDto, creator: User): Promise<File> {
     const file = new File();
@@ -22,7 +24,16 @@ export class FilesService {
   }
 
   async findOne(id: number): Promise<File | null> {
+    const cacheValue: File = await this.cacheManager.get(id.toString());
+    if (cacheValue && cacheValue instanceof File) {
+      return cacheValue;
+    }
+
     const files = await this.filesRepository.findByIds([id]);
-    return files.length != 0 ? files[0] : null;
+    const file = files.length != 0 ? files[0] : null;
+    if (file) {
+      this.cacheManager.set(id.toString(), file, { ttl: 3600 });
+    }
+    return file;
   }
 }
