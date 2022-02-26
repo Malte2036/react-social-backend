@@ -36,6 +36,8 @@ export class PostsService {
   }
 
   async findOne(id: number): Promise<Post | null> {
+    if (!id) return null;
+
     const posts = await this.postsRepository.findByIds([id]);
     return posts.length != 0 ? posts[0] : null;
   }

@@ -51,6 +51,8 @@ export class UsersService {
   }
 
   async findOne(id: number, includeEmail?: boolean): Promise<User | null> {
+    if (!id) return null;
+
     const users = includeEmail
       ? await this.usersRepository.findByIds([id], {
           select: ['id', 'name', 'email', 'imageId', 'createdAt', 'updatedAt'],

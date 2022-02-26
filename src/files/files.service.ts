@@ -24,6 +24,8 @@ export class FilesService {
   }
 
   async findOne(id: number): Promise<File | null> {
+    if (!id) return null;
+
     const cacheValue: File = await this.cacheManager.get(id.toString());
     if (cacheValue && cacheValue instanceof File) {
       return cacheValue;
