@@ -71,6 +71,11 @@ export class PostsController {
     return await this.likesService.findAllByPostId(+id);
   }
 
+  @Get(':id/likes/me')
+  async isLikedByMe(@Param('id') id: string, @Req() req): Promise<boolean> {
+    return await this.likesService.isLikedByUser(+id, req.user.userId);
+  }
+
   @Get(':id/likes/count')
   async getAllLikesCount(@Param('id') id: string, @Req() req) {
     const likes = await this.likesService.findAllByPostId(+id);
@@ -79,7 +84,7 @@ export class PostsController {
 
   @Post(':id/likes')
   async createLike(@Param('id') id: string, @Req() req) {
-    if (await this.likesService.findByPostIdAndUserId(+id, req.user.userId)) {
+    if (await this.likesService.isLikedByUser(+id, req.user.userId)) {
       throw new HttpException('Post already liked by user.', 409);
     }
     const user = await this.usersService.findOne(req.user.userId);

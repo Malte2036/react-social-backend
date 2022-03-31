@@ -38,4 +38,8 @@ export class LikesService {
       where: { postId: postId, userId: userId },
     });
   }
+
+  async isLikedByUser(postId: number, userId: number): Promise<boolean> {
+    return (await this.findByPostIdAndUserId(postId, userId)) != null;
+  }
 }
