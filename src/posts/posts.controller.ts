@@ -9,12 +9,16 @@ import {
   Req,
   NotFoundException,
   UnauthorizedException,
+  Post,
+  HttpException,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { UsersService } from 'src/users/users.service';
+import { LikesService } from 'src/likes/likes.service';
+import { Like } from 'src/likes/entities/like.entity';
 
 @ApiTags('posts')
 @UseGuards(AuthGuard('jwt'))
@@ -24,6 +28,7 @@ export class PostsController {
   constructor(
     private readonly postsService: PostsService,
     private readonly usersService: UsersService,
+    private readonly likesService: LikesService,
   ) {}
 
   @RequestPost()
@@ -59,5 +64,26 @@ export class PostsController {
       throw new UnauthorizedException('You cannot delete this post');
     }
     return this.postsService.delete(+id);
+  }
+
+  @Get(':id/likes')
+  async getAllLikes(@Param('id') id: string, @Req() req): Promise<Like[]> {
+    return await this.likesService.findAllByPostId(+id);
+  }
+
+  @Get(':id/likes/count')
+  async getAllLikesCount(@Param('id') id: string, @Req() req) {
+    const likes = await this.likesService.findAllByPostId(+id);
+    return likes.length;
+  }
+
+  @Post(':id/likes')
+  async createLike(@Param('id') id: string, @Req() req) {
+    if (await this.likesService.findByPostIdAndUserId(+id, req.user.userId)) {
+      throw new HttpException('Post already liked by user.', 409);
+    }
+    const user = await this.usersService.findOne(req.user.userId);
+    const post = await this.postsService.findOne(+id);
+    await this.likesService.create(post, user);
   }
 }

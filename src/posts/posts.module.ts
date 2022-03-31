@@ -8,12 +8,14 @@ import { UsersModule } from 'src/users/users.module';
 import { EventsGateway } from 'src/events.gateway';
 import { AppModule } from 'src/app.module';
 import { FilesModule } from 'src/files/files.module';
+import { LikesModule } from 'src/likes/likes.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Post, PostsRepository]),
     UsersModule,
     FilesModule,
+    LikesModule,
     forwardRef(() => AppModule),
     EventsGateway,
   ],
