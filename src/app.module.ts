@@ -11,6 +11,8 @@ import { ConfigModule } from '@nestjs/config';
 import { EventsGateway } from './events.gateway';
 import { FilesModule } from './files/files.module';
 import { File } from './files/entities/file.entity';
+import { Like } from './likes/entities/like.entity';
+import { LikesModule } from './likes/likes.module';
 
 @Module({
   imports: [
@@ -22,13 +24,14 @@ import { File } from './files/entities/file.entity';
       username: 'root',
       password: process.env.MARIADB_ROOT_PASSWORD,
       database: 'react-social',
-      entities: [User, Post, File],
+      entities: [User, Post, File, Like],
       synchronize: true,
     }),
     AuthModule,
     FilesModule,
     PostsModule,
     UsersModule,
+    LikesModule,
   ],
   controllers: [AppController],
   providers: [AppService, EventsGateway],

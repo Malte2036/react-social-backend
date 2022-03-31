@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { File } from 'src/files/entities/file.entity';
+import { Like } from 'src/likes/entities/like.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
@@ -7,6 +8,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -47,4 +49,7 @@ export class Post {
   @Column()
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => Like, (likes) => likes.post)
+  likes: Like[];
 }

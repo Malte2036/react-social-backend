@@ -5,7 +5,6 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  JoinTable,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -14,6 +13,7 @@ import {
 import * as bcrypt from 'bcryptjs';
 import { Post } from 'src/posts/entities/post.entity';
 import { File } from 'src/files/entities/file.entity';
+import { Like } from 'src/likes/entities/like.entity';
 
 @Entity()
 export class User {
@@ -37,6 +37,9 @@ export class User {
 
   @OneToMany(() => File, (files) => files.creator)
   files: File[];
+
+  @OneToMany(() => Like, (likes) => likes.user)
+  likes: Like[];
 
   @ApiProperty()
   @Column({ nullable: true })
