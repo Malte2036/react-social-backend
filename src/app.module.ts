@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { PostsModule } from './posts/posts.module';
 import { Post } from './posts/entities/post.entity';
 import { UsersModule } from './users/users.module';
@@ -33,8 +31,7 @@ import { LikesModule } from './likes/likes.module';
     UsersModule,
     LikesModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, EventsGateway],
+  providers: [EventsGateway],
   exports: [EventsGateway],
 })
 export class AppModule {}
