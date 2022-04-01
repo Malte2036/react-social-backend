@@ -91,4 +91,12 @@ export class PostsController {
     const post = await this.postsService.findOne(+id);
     await this.likesService.create(post, user);
   }
+
+  @Delete(':id/likes')
+  async deleteLike(@Param('id') id: string, @Req() req) {
+    if (!(await this.likesService.isLikedByUser(+id, req.user.userId))) {
+      throw new HttpException('Post not liked by user.', 404);
+    }
+    await this.likesService.deleteByPostIdAndUserId(+id, req.user.userId);
+  }
 }

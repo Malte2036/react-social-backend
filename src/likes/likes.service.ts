@@ -20,6 +20,15 @@ export class LikesService {
     return like;
   }
 
+  async delete(like: Like): Promise<void> {
+    await this.likesRepository.delete(like);
+  }
+
+  async deleteByPostIdAndUserId(postId: number, userId: number): Promise<void> {
+    const like = await this.findByPostIdAndUserId(postId, userId);
+    await this.delete(like);
+  }
+
   async findAllByPostId(postId: number): Promise<Like[]> {
     if (!postId) {
       return [];
