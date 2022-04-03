@@ -63,4 +63,9 @@ export class User {
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 8);
   }
+
+  @BeforeInsert()
+  async emailToLowercase() {
+    this.email = this.email.toLowerCase();
+  }
 }

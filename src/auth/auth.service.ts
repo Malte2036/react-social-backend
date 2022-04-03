@@ -49,10 +49,17 @@ export class AuthService {
   async register(registerDto: RegisterDto) {
     const user = await this.usersService.create(registerDto);
 
-    const payload = { userId: user.id, userEmail: user.email };
+    const payload = { userId: user.id, userEmail: user.email.toLowerCase() };
 
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  validateEmail(email: string) {
+    const regexp = new RegExp(
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+    );
+    return regexp.test(email);
   }
 }
