@@ -35,6 +35,10 @@ export class PostsService {
     return await this.postsRepository.find();
   }
 
+  async findAllByCreatorId(creatorId: string): Promise<Post[]> {
+    return await this.postsRepository.find({ where: { creatorId } });
+  }
+
   async findOne(id: number): Promise<Post | null> {
     if (!id) return null;
 
