@@ -18,8 +18,8 @@ import { Like } from 'src/likes/entities/like.entity';
 @Entity()
 export class User {
   @ApiProperty()
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @ApiProperty()
   @Column()
@@ -43,7 +43,7 @@ export class User {
 
   @ApiProperty()
   @Column({ nullable: true })
-  imageId: number;
+  imageId: string;
 
   @OneToOne(() => File)
   @JoinColumn()

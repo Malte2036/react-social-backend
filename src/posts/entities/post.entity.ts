@@ -17,8 +17,8 @@ import {
 @Entity()
 export class Post {
   @ApiProperty()
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @ApiProperty()
   @Column('longtext')
@@ -26,7 +26,7 @@ export class Post {
 
   @ApiProperty()
   @Column({ nullable: true })
-  creatorId?: number;
+  creatorId?: string;
 
   @ApiProperty()
   @ManyToOne(() => User, (user) => user.posts)
@@ -34,7 +34,7 @@ export class Post {
 
   @ApiProperty()
   @Column({ nullable: true })
-  imageId: number;
+  imageId: string;
 
   @OneToOne(() => File)
   @JoinColumn()

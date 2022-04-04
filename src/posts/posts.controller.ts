@@ -50,7 +50,7 @@ export class PostsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.postsService.findOne(+id);
+    return this.postsService.findOne(id);
   }
 
   @Get('/byCreatorId/:creatorId')
@@ -64,47 +64,47 @@ export class PostsController {
   @Delete(':id')
   async remove(@Param('id') id: string, @Req() req) {
     const user = await this.usersService.findOne(req.user.userId);
-    const post = await this.postsService.findOne(+id);
+    const post = await this.postsService.findOne(id);
     if (post == null) {
       throw new NotFoundException('Post not found');
     }
     if (post.creatorId != user.id) {
       throw new UnauthorizedException('You cannot delete this post');
     }
-    return this.postsService.delete(+id);
+    return this.postsService.delete(id);
   }
 
   @Get(':id/likes')
   async getAllLikes(@Param('id') id: string, @Req() req): Promise<Like[]> {
-    return await this.likesService.findAllByPostId(+id);
+    return await this.likesService.findAllByPostId(id);
   }
 
   @Get(':id/likes/me')
   async isLikedByMe(@Param('id') id: string, @Req() req): Promise<boolean> {
-    return await this.likesService.isLikedByUser(+id, req.user.userId);
+    return await this.likesService.isLikedByUser(id, req.user.userId);
   }
 
   @Get(':id/likes/count')
   async getAllLikesCount(@Param('id') id: string, @Req() req) {
-    const likes = await this.likesService.findAllByPostId(+id);
+    const likes = await this.likesService.findAllByPostId(id);
     return likes.length;
   }
 
   @Post(':id/likes')
   async createLike(@Param('id') id: string, @Req() req) {
-    if (await this.likesService.isLikedByUser(+id, req.user.userId)) {
+    if (await this.likesService.isLikedByUser(id, req.user.userId)) {
       throw new HttpException('Post already liked by user.', 409);
     }
     const user = await this.usersService.findOne(req.user.userId);
-    const post = await this.postsService.findOne(+id);
+    const post = await this.postsService.findOne(id);
     await this.likesService.create(post, user);
   }
 
   @Delete(':id/likes')
   async deleteLike(@Param('id') id: string, @Req() req) {
-    if (!(await this.likesService.isLikedByUser(+id, req.user.userId))) {
+    if (!(await this.likesService.isLikedByUser(id, req.user.userId))) {
       throw new HttpException('Post not liked by user.', 404);
     }
-    await this.likesService.deleteByPostIdAndUserId(+id, req.user.userId);
+    await this.likesService.deleteByPostIdAndUserId(id, req.user.userId);
   }
 }

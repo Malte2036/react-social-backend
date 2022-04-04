@@ -18,7 +18,7 @@ export class FilesController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    const file = await this.filesService.findOne(+id);
+    const file = await this.filesService.findOne(id);
     if (file == null) {
       throw new NotFoundException('File not found!');
     }

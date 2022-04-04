@@ -23,10 +23,10 @@ export class FilesService {
     return await this.filesRepository.save(file);
   }
 
-  async findOne(id: number): Promise<File | null> {
+  async findOne(id: string): Promise<File | null> {
     if (!id) return null;
 
-    const cacheValue: File = await this.cacheManager.get(id.toString());
+    const cacheValue: File = await this.cacheManager.get(id);
     if (cacheValue && cacheValue instanceof File) {
       return cacheValue;
     }
@@ -34,7 +34,7 @@ export class FilesService {
     const files = await this.filesRepository.findByIds([id]);
     const file = files.length != 0 ? files[0] : null;
     if (file) {
-      this.cacheManager.set(id.toString(), file, { ttl: 3600 });
+      this.cacheManager.set(id, file, { ttl: 3600 });
     }
     return file;
   }

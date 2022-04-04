@@ -5,12 +5,12 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Like {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @ApiProperty()
   @Column({ nullable: true })
-  postId?: number;
+  postId?: string;
 
   @ApiProperty()
   @ManyToOne(() => Post, (post) => post.likes)
@@ -18,7 +18,7 @@ export class Like {
 
   @ApiProperty()
   @Column({ nullable: true })
-  userId?: number;
+  userId?: string;
 
   @ApiProperty()
   @ManyToOne(() => User, (user) => user.likes)

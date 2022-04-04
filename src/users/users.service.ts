@@ -50,7 +50,7 @@ export class UsersService {
     return await this.usersRepository.find();
   }
 
-  async findOne(id: number, includeEmail?: boolean): Promise<User | null> {
+  async findOne(id: string, includeEmail?: boolean): Promise<User | null> {
     if (!id) return null;
 
     const users = includeEmail
@@ -85,7 +85,7 @@ export class UsersService {
     return user;
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     return await this.usersRepository.delete(id);
   }
 }

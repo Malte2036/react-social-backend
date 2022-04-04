@@ -39,14 +39,14 @@ export class PostsService {
     return await this.postsRepository.find({ where: { creatorId } });
   }
 
-  async findOne(id: number): Promise<Post | null> {
+  async findOne(id: string): Promise<Post | null> {
     if (!id) return null;
 
     const posts = await this.postsRepository.findByIds([id]);
     return posts.length != 0 ? posts[0] : null;
   }
 
-  async delete(id: number) {
+  async delete(id: string) {
     const post = await this.findOne(id);
     if (post == null) {
       return;

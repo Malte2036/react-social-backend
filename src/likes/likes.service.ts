@@ -24,12 +24,12 @@ export class LikesService {
     await this.likesRepository.delete(like);
   }
 
-  async deleteByPostIdAndUserId(postId: number, userId: number): Promise<void> {
+  async deleteByPostIdAndUserId(postId: string, userId: string): Promise<void> {
     const like = await this.findByPostIdAndUserId(postId, userId);
     await this.delete(like);
   }
 
-  async findAllByPostId(postId: number): Promise<Like[]> {
+  async findAllByPostId(postId: string): Promise<Like[]> {
     if (!postId) {
       return [];
     }
@@ -37,8 +37,8 @@ export class LikesService {
   }
 
   async findByPostIdAndUserId(
-    postId: number,
-    userId: number,
+    postId: string,
+    userId: string,
   ): Promise<Like | null> {
     if (!postId) {
       return null;
@@ -48,7 +48,7 @@ export class LikesService {
     });
   }
 
-  async isLikedByUser(postId: number, userId: number): Promise<boolean> {
+  async isLikedByUser(postId: string, userId: string): Promise<boolean> {
     return (await this.findByPostIdAndUserId(postId, userId)) != null;
   }
 }

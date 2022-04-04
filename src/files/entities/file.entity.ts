@@ -3,8 +3,8 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class File {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;
@@ -16,7 +16,7 @@ export class File {
   mimeType: string;
 
   @Column({ nullable: true })
-  creatorId: number;
+  creatorId: string;
 
   @ManyToOne(() => User, (user) => user.files)
   creator: User;
