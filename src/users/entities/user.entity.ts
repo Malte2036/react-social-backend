@@ -14,6 +14,7 @@ import * as bcrypt from 'bcryptjs';
 import { Post } from 'src/posts/entities/post.entity';
 import { File } from 'src/files/entities/file.entity';
 import { Like } from 'src/likes/entities/like.entity';
+import { Comment } from 'src/comments/entities/comment.entity';
 
 @Entity()
 export class User {
@@ -34,6 +35,9 @@ export class User {
 
   @OneToMany(() => Post, (posts) => posts.creator)
   posts: Post[];
+
+  @OneToMany(() => Comment, (comments) => comments.creator)
+  comments: Comment[];
 
   @OneToMany(() => File, (files) => files.creator)
   files: File[];

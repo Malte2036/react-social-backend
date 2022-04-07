@@ -11,6 +11,8 @@ import { FilesModule } from './files/files.module';
 import { File } from './files/entities/file.entity';
 import { Like } from './likes/entities/like.entity';
 import { LikesModule } from './likes/likes.module';
+import { CommentsModule } from './comments/comments.module';
+import { Comment } from './comments/entities/comment.entity';
 
 @Module({
   imports: [
@@ -22,7 +24,7 @@ import { LikesModule } from './likes/likes.module';
       username: 'root',
       password: process.env.MARIADB_ROOT_PASSWORD,
       database: 'react-social',
-      entities: [User, Post, File, Like],
+      entities: [User, Post, File, Like, Comment],
       synchronize: true,
     }),
     AuthModule,
@@ -30,6 +32,7 @@ import { LikesModule } from './likes/likes.module';
     PostsModule,
     UsersModule,
     LikesModule,
+    CommentsModule,
   ],
   providers: [EventsGateway],
   exports: [EventsGateway],
