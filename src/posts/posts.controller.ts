@@ -97,6 +97,9 @@ export class PostsController {
     }
     const user = await this.usersService.findOne(req.user.userId);
     const post = await this.postsService.findOne(id);
+    if (post == null) {
+      throw new NotFoundException('Post not found');
+    }
     await this.likesService.create(post, user);
   }
 
