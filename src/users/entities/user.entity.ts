@@ -36,7 +36,7 @@ export class User {
   @OneToMany(() => Post, (posts) => posts.creator)
   posts: Post[];
 
-  @OneToMany(() => Comment, (comments) => comments.creator)
+  @OneToMany(() => Comment, (comment) => comment.creator)
   comments: Comment[];
 
   @OneToMany(() => File, (files) => files.creator)
