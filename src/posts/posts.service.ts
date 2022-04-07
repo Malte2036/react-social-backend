@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EventsGateway } from 'src/events.gateway';
-import { FilesRepository } from 'src/files/files.repository';
 import { FilesService } from 'src/files/files.service';
+import { LikesService } from 'src/likes/likes.service';
 import { User } from 'src/users/entities/user.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { Post } from './entities/post.entity';
@@ -13,6 +13,7 @@ export class PostsService {
   constructor(
     @InjectRepository(PostsRepository)
     private readonly postsRepository: PostsRepository,
+    private readonly likesService: LikesService,
     private readonly filesService: FilesService,
     private readonly eventsGateway: EventsGateway,
   ) {}
@@ -51,7 +52,7 @@ export class PostsService {
     if (post == null) {
       return;
     }
-
+    await this.likesService.deleteAllByPostId(id);
     return await this.postsRepository.delete(id);
   }
 }

@@ -24,6 +24,11 @@ export class LikesService {
     await this.likesRepository.delete(like);
   }
 
+  async deleteAllByPostId(postId: string): Promise<void> {
+    const likes = await this.findAllByPostId(postId);
+    await Promise.all(likes.map(async (like) => await this.delete(like)));
+  }
+
   async deleteByPostIdAndUserId(postId: string, userId: string): Promise<void> {
     const like = await this.findByPostIdAndUserId(postId, userId);
     await this.delete(like);
