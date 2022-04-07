@@ -19,6 +19,9 @@ import { AuthGuard } from '@nestjs/passport';
 import { UsersService } from 'src/users/users.service';
 import { LikesService } from 'src/likes/likes.service';
 import { Like } from 'src/likes/entities/like.entity';
+import { CommentsService } from 'src/comments/comments.service';
+import { Comment } from 'src/comments/entities/comment.entity';
+import { CreateCommentDto } from 'src/comments/dto/create-comment.dto';
 
 @ApiTags('posts')
 @UseGuards(AuthGuard('jwt'))
@@ -29,6 +32,7 @@ export class PostsController {
     private readonly postsService: PostsService,
     private readonly usersService: UsersService,
     private readonly likesService: LikesService,
+    private readonly commentsService: CommentsService,
   ) {}
 
   @RequestPost()
@@ -109,5 +113,27 @@ export class PostsController {
       throw new HttpException('Post not liked by user.', 404);
     }
     await this.likesService.deleteByPostIdAndUserId(id, req.user.userId);
+  }
+
+  @Get(':id/comments')
+  async getAllComments(
+    @Param('id') id: string,
+    @Req() req,
+  ): Promise<Comment[]> {
+    return await this.commentsService.findAllByPostId(id);
+  }
+
+  @Post(':id/comments')
+  async createComment(
+    @Param('id') id: string,
+    @Body() createCommentDto: CreateCommentDto,
+    @Req() req,
+  ) {
+    const user = await this.usersService.findOne(req.user.userId);
+    const post = await this.postsService.findOne(id);
+    if (post == null) {
+      throw new NotFoundException('Post not found');
+    }
+    await this.commentsService.create(createCommentDto, post, user);
   }
 }

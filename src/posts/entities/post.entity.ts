@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Comment } from 'src/comments/entities/comment.entity';
 import { File } from 'src/files/entities/file.entity';
 import { Like } from 'src/likes/entities/like.entity';
 import { User } from 'src/users/entities/user.entity';
@@ -17,7 +18,7 @@ import {
 @Entity()
 export class Post {
   @ApiProperty()
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @ApiProperty()
@@ -52,4 +53,7 @@ export class Post {
 
   @OneToMany(() => Like, (likes) => likes.post)
   likes: Like[];
+
+  @OneToMany(() => Comment, (comment) => comment.post)
+  comments: Comment[];
 }

@@ -9,6 +9,7 @@ import { EventsGateway } from 'src/events.gateway';
 import { AppModule } from 'src/app.module';
 import { FilesModule } from 'src/files/files.module';
 import { LikesModule } from 'src/likes/likes.module';
+import { CommentsModule } from 'src/comments/comments.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { LikesModule } from 'src/likes/likes.module';
     UsersModule,
     FilesModule,
     LikesModule,
+    CommentsModule,
     forwardRef(() => AppModule),
     EventsGateway,
   ],
