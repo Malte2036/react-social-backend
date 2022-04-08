@@ -13,6 +13,9 @@ export class LikesService {
   ) {}
 
   async create(post: Post, user: User): Promise<Like | null> {
+    if (this.isLikedByUser(post.id, user.id)) {
+      return null;
+    }
     const like = new Like();
     like.user = user;
     like.post = post;
