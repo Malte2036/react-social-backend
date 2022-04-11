@@ -52,6 +52,14 @@ export class PostsController {
     return this.postsService.findAll();
   }
 
+  @Get('id')
+  @ApiCreatedResponse({
+    description: 'List of posts ids',
+  })
+  findAllIds() {
+    return this.postsService.findAllIds();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.postsService.findOne(id);

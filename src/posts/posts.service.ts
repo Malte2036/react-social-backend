@@ -36,6 +36,11 @@ export class PostsService {
     return await this.postsRepository.find();
   }
 
+  async findAllIds(): Promise<{ createdAt: Date; id: string }[]> {
+    const posts = await this.findAll();
+    return posts.map((post) => ({ createdAt: post.createdAt, id: post.id }));
+  }
+
   async findAllByCreatorId(creatorId: string): Promise<Post[]> {
     return await this.postsRepository.find({ where: { creatorId } });
   }
