@@ -73,6 +73,14 @@ export class PostsController {
     return this.postsService.findAllByCreatorId(creatorId);
   }
 
+  @Get('/byCreatorId/:creatorId/id')
+  @ApiCreatedResponse({
+    description: 'List of post ids filtered by creatorId',
+  })
+  findAllIdsByCreatorId(@Param('creatorId') creatorId: string) {
+    return this.postsService.findAllIdsByCreatorId(creatorId);
+  }
+
   @Delete(':id')
   async remove(@Param('id') id: string, @Req() req) {
     const user = await this.usersService.findOne(req.user.userId);
