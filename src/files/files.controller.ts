@@ -2,7 +2,6 @@ import {
   BadRequestException,
   Controller,
   Get,
-  NotFoundException,
   Param,
   Post,
   Res,
@@ -12,36 +11,48 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { of } from 'rxjs';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FilesService } from './files.service';
-import * as multer from 'multer';
+import { diskStorage } from 'multer';
 import { extname } from 'path';
 
 @ApiTags('files')
-//@UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth('token')
 @Controller('files')
 export class FilesController {
-  constructor(private readonly filesService: FilesService) { }
+  constructor(private readonly filesService: FilesService) {}
 
-  @Get(':id')
-  async findOne(@Param('id') id: string, @Res() res) {
-    const file = await this.filesService.findOne(id);
-    if (file == null) {
-      throw new NotFoundException('File not found!');
-    }
-    return of(res.send(file.data));
-    return file;
-  }
   @Post()
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        image: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
   @UseInterceptors(
     FileInterceptor('image', {
-      storage: multer.diskStorage({
+      storage: diskStorage({
         destination: './files',
-        filename: editFileName,
+        filename: function (req, file, cb) {
+          const uniqueSuffix =
+            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const fileExtName = extname(file.originalname);
+          cb(null, `${file.fieldname}-${uniqueSuffix}${fileExtName}`);
+        },
       }),
-      fileFilter: imageFileFilter,
+      fileFilter: function (req, file, cb) {
+        if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+          return cb(new Error('Only image files are allowed!'), false);
+        }
+        cb(null, true);
+      },
     }),
   )
   async uploadedFile(@UploadedFile() file) {
@@ -56,25 +67,8 @@ export class FilesController {
     return response;
   }
 
-  @Get('/test/:id')
+  @Get(':id')
   seeUploadedFile(@Param('id') image, @Res() res): any {
-    return res.sendFile(`${image}.png`, { root: './files' });
+    return res.sendFile(`${image}`, { root: './files' });
   }
 }
-
-export const editFileName = (req, file, callback) => {
-  const name = file.originalname.split('.')[0];
-  const fileExtName = extname(file.originalname);
-  const randomName = Array(4)
-    .fill(null)
-    .map(() => Math.round(Math.random() * 16).toString(16))
-    .join('');
-  callback(null, `${name}-${randomName}${fileExtName}`);
-};
-
-export const imageFileFilter = (req, file, callback) => {
-  if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
-    return callback(new Error('Only image files are allowed!'), false);
-  }
-  callback(null, true);
-};

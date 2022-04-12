@@ -399,3 +399,4 @@ dist
 .mysql-data/
 database.sqlite
 package-lock.json
+files
