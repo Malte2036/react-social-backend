@@ -52,6 +52,14 @@ export class PostsController {
     return this.postsService.findAll();
   }
 
+  @Get('id')
+  @ApiCreatedResponse({
+    description: 'List of posts ids',
+  })
+  findAllIds() {
+    return this.postsService.findAllIds();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.postsService.findOne(id);
@@ -63,6 +71,14 @@ export class PostsController {
   })
   findAllByCreatorId(@Param('creatorId') creatorId: string) {
     return this.postsService.findAllByCreatorId(creatorId);
+  }
+
+  @Get('/byCreatorId/:creatorId/id')
+  @ApiCreatedResponse({
+    description: 'List of post ids filtered by creatorId',
+  })
+  findAllIdsByCreatorId(@Param('creatorId') creatorId: string) {
+    return this.postsService.findAllIdsByCreatorId(creatorId);
   }
 
   @Delete(':id')
