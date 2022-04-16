@@ -13,12 +13,10 @@ export class FilesService {
     private readonly filesRepository: FilesRepository,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
-  async create(createFileDto: CreateFileDto, creator: User): Promise<File> {
+  async create(imageName: string, creator: User): Promise<File> {
     const file = new File();
     file.creator = creator;
-    file.data = createFileDto.data;
-    file.name = createFileDto.name;
-    file.mimeType = createFileDto.mimeType;
+    file.name = imageName;
 
     return await this.filesRepository.save(file);
   }

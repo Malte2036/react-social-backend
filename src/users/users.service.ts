@@ -40,10 +40,11 @@ export class UsersService {
   }
 
   async changeImage(createFileDto: CreateFileDto, user: User) {
-    const image = await this.filesService.create(createFileDto, user);
+    /*const image = await this.filesService.create(createFileDto, user);
     user.image = image;
 
-    await this.usersRepository.save(user);
+    await this.usersRepository.save(user);*/
+    console.warn("TODO: implement users.changeImage")
   }
 
   async findAll(): Promise<User[]> {

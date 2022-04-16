@@ -11,10 +11,18 @@ import {
   UnauthorizedException,
   Post,
   HttpException,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
-import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiCreatedResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { UsersService } from 'src/users/users.service';
 import { LikesService } from 'src/likes/likes.service';
@@ -22,6 +30,9 @@ import { Like } from 'src/likes/entities/like.entity';
 import { CommentsService } from 'src/comments/comments.service';
 import { Comment } from 'src/comments/entities/comment.entity';
 import { CreateCommentDto } from 'src/comments/dto/create-comment.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 
 @ApiTags('posts')
 @UseGuards(AuthGuard('jwt'))
@@ -36,12 +47,52 @@ export class PostsController {
   ) {}
 
   @RequestPost()
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './files',
+        filename: function (req, file, cb) {
+          const uniqueSuffix =
+            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const fileExtName = extname(file.originalname);
+          cb(null, `${file.fieldname}-${uniqueSuffix}${fileExtName}`);
+        },
+      }),
+      fileFilter: function (req, file, cb) {
+        if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+          return cb(new Error('Only image files are allowed!'), false);
+        }
+        cb(null, true);
+      },
+    }),
+  )
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    isArray: true,
+    schema: {
+      type: 'object',
+      required: ['message'],
+      properties: {
+        message: {
+          type: 'string',
+        },
+        image: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
   @ApiCreatedResponse({
     description: 'The post has been successfully created.',
   })
-  async create(@Body() createPostDto: CreatePostDto, @Req() req) {
+  async create(
+    @Body('message') message: string,
+    @UploadedFile() image: Express.Multer.File,
+    @Req() req,
+  ) {
     const user = await this.usersService.findOne(req.user.userId);
-    return this.postsService.create(createPostDto, user);
+    return this.postsService.create({ message }, user, image?.filename);
   }
 
   @Get()

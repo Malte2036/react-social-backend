@@ -9,13 +9,6 @@ export class File {
   @Column()
   name: string;
 
-  @Column('longtext')
-  data: Buffer;
-
-  @Column()
-  mimeType: string;
-
-  @Column({ nullable: true })
   creatorId: string;
 
   @ManyToOne(() => User, (user) => user.files)

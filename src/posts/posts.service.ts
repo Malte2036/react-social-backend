@@ -18,15 +18,15 @@ export class PostsService {
     private readonly eventsGateway: EventsGateway,
   ) {}
 
-  async create(createPostDto: CreatePostDto, creator: User) {
+  async create(createPostDto: CreatePostDto, creator: User, imageName?: string) {
     const post = new Post();
     post.message = createPostDto.message;
     post.creator = creator;
 
-    if (createPostDto.image != undefined) {
-      post.image = await this.filesService.create(createPostDto.image, creator);
+    if (imageName != undefined) {
+      post.image = await this.filesService.create(imageName, creator);
     }
-
+    
     await this.postsRepository.save(post);
     this.eventsGateway.server.emit('posts', post);
     return post;
