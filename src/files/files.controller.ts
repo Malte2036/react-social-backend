@@ -11,8 +11,8 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { FilesService } from './files.service';
 
 @ApiTags('files')
-@UseGuards(AuthGuard('jwt'))
-@ApiBearerAuth('token')
+//@UseGuards(AuthGuard('jwt'))
+//@ApiBearerAuth('token')
 @Controller('files')
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
