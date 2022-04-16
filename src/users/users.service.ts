@@ -39,12 +39,11 @@ export class UsersService {
     throw new ConflictException('User already exists!');
   }
 
-  async changeImage(createFileDto: CreateFileDto, user: User) {
-    /*const image = await this.filesService.create(createFileDto, user);
+  async changeImage(imageName: string, user: User) {
+    const image = await this.filesService.create(imageName, user);
     user.image = image;
 
-    await this.usersRepository.save(user);*/
-    console.warn("TODO: implement users.changeImage")
+    await this.usersRepository.save(user);
   }
 
   async findAll(): Promise<User[]> {
