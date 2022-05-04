@@ -1,7 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Post } from 'src/posts/entities/post.entity';
 import { User } from 'src/users/entities/user.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Comment {
@@ -11,6 +18,16 @@ export class Comment {
   @ApiProperty()
   @Column('longtext')
   message: string;
+
+  @ApiProperty()
+  @Column()
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @ApiProperty()
+  @Column()
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @ApiProperty()
   @Column({ nullable: true })
