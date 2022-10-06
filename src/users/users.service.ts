@@ -7,14 +7,14 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateFileDto } from 'src/files/dto/create-file.dto';
 import { FilesService } from 'src/files/files.service';
+import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(UsersRepository)
-    private readonly usersRepository: UsersRepository,
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>,
     private readonly filesService: FilesService,
   ) {}
 
@@ -34,6 +34,7 @@ export class UsersService {
 
         return await this.usersRepository.save(user);
       }
+      console.warn(error);
       throw new InternalServerErrorException();
     }
     throw new ConflictException('User already exists!');

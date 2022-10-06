@@ -2,15 +2,14 @@ import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cache } from 'cache-manager';
 import { User } from 'src/users/entities/user.entity';
-import { CreateFileDto } from './dto/create-file.dto';
+import { Repository } from 'typeorm';
 import { File } from './entities/file.entity';
-import { FilesRepository } from './files.repository';
 
 @Injectable()
 export class FilesService {
   constructor(
-    @InjectRepository(FilesRepository)
-    private readonly filesRepository: FilesRepository,
+    @InjectRepository(File)
+    private readonly filesRepository: Repository<File>,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
   async create(imageName: string, creator: User): Promise<File> {

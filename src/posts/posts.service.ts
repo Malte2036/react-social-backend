@@ -4,21 +4,25 @@ import { EventsGateway } from 'src/events.gateway';
 import { FilesService } from 'src/files/files.service';
 import { LikesService } from 'src/likes/likes.service';
 import { User } from 'src/users/entities/user.entity';
+import { Repository } from 'typeorm';
 import { CreatePostDto } from './dto/create-post.dto';
 import { Post } from './entities/post.entity';
-import { PostsRepository } from './posts.repository';
 
 @Injectable()
 export class PostsService {
   constructor(
-    @InjectRepository(PostsRepository)
-    private readonly postsRepository: PostsRepository,
+    @InjectRepository(Post)
+    private readonly postsRepository: Repository<Post>,
     private readonly likesService: LikesService,
     private readonly filesService: FilesService,
     private readonly eventsGateway: EventsGateway,
   ) {}
 
-  async create(createPostDto: CreatePostDto, creator: User, imageName?: string) {
+  async create(
+    createPostDto: CreatePostDto,
+    creator: User,
+    imageName?: string,
+  ) {
     const post = new Post();
     post.message = createPostDto.message;
     post.creator = creator;
@@ -26,7 +30,7 @@ export class PostsService {
     if (imageName != undefined) {
       post.image = await this.filesService.create(imageName, creator);
     }
-    
+
     await this.postsRepository.save(post);
     this.eventsGateway.server.emit('posts', post);
     return post;

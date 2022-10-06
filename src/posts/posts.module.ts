@@ -3,7 +3,6 @@ import { PostsService } from './posts.service';
 import { PostsController } from './posts.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Post } from './entities/post.entity';
-import { PostsRepository } from './posts.repository';
 import { UsersModule } from 'src/users/users.module';
 import { EventsGateway } from 'src/events.gateway';
 import { AppModule } from 'src/app.module';
@@ -13,7 +12,7 @@ import { CommentsModule } from 'src/comments/comments.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Post, PostsRepository]),
+    TypeOrmModule.forFeature([Post]),
     UsersModule,
     FilesModule,
     LikesModule,

@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from 'src/posts/entities/post.entity';
 import { User } from 'src/users/entities/user.entity';
+import { Repository } from 'typeorm';
 import { Like } from './entities/like.entity';
-import { LikesRepository } from './likes.repository';
 
 @Injectable()
 export class LikesService {
   constructor(
-    @InjectRepository(LikesRepository)
-    private readonly likesRepository: LikesRepository,
+    @InjectRepository(Like)
+    private readonly likesRepository: Repository<Like>,
   ) {}
 
   async create(post: Post, user: User): Promise<Like | null> {

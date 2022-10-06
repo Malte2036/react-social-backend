@@ -1,7 +1,6 @@
 import { CacheModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { File } from './entities/file.entity';
-import { FilesRepository } from './files.repository';
 import { FilesService } from './files.service';
 import { FilesController } from './files.controller';
 import { MulterModule } from '@nestjs/platform-express';
@@ -11,7 +10,7 @@ import { MulterModule } from '@nestjs/platform-express';
     MulterModule.register({
       dest: './files',
     }),
-    TypeOrmModule.forFeature([File, FilesRepository]),
+    TypeOrmModule.forFeature([File]),
     CacheModule.register(),
   ],
   providers: [FilesService],
