@@ -53,11 +53,12 @@ export class UsersService {
   async findOne(id: string, includeEmail?: boolean): Promise<User | null> {
     if (!id) return null;
 
-    const users = includeEmail
-      ? await this.usersRepository.findByIds([id], {
-          select: ['id', 'name', 'email', 'imageId', 'createdAt', 'updatedAt'],
-        })
-      : await this.usersRepository.findByIds([id]);
+    let users = await this.usersRepository.findBy({ id });
+
+    if (!includeEmail) {
+      users.forEach((user) => delete user.email);
+    }
+
     if (users.length == 0) {
       throw new NotFoundException('User not found');
     }

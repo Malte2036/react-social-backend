@@ -32,7 +32,7 @@ export class FilesService {
     const files = await this.filesRepository.findByIds([id]);
     const file = files.length != 0 ? files[0] : null;
     if (file) {
-      this.cacheManager.set(id, file, { ttl: 3600 });
+      this.cacheManager.set(id, file, 3600);
     }
     return file;
   }

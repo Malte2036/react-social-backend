@@ -24,7 +24,7 @@ export class LikesService {
   }
 
   async delete(like: Like): Promise<void> {
-    await this.likesRepository.delete(like);
+    await this.likesRepository.delete(like.id);
   }
 
   async deleteAllByPostId(postId: string): Promise<void> {
