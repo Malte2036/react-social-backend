@@ -1,15 +1,7 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Get,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
+import { GoogleDto } from './dto/google.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 
@@ -31,13 +23,8 @@ export class AuthController {
     return await this.authService.register(registerDto);
   }
 
-  @Get('google')
-  @UseGuards(AuthGuard('google'))
-  async googleAuth(@Req() req) {}
-
-  @Get('google/redirect')
-  @UseGuards(AuthGuard('google'))
-  googleAuthRedirect(@Req() req) {
-    return this.authService.googleLogin(req);
+  @Post('google')
+  async googleAuth(@Body() googleDto: GoogleDto) {
+    return await this.authService.googleLogin(googleDto);
   }
 }

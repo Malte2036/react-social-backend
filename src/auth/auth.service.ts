@@ -10,21 +10,23 @@ import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { GoogleDto } from './dto/google.dto';
+import { OAuth2Client } from 'google-auth-library';
 
 type UserOrNull = User | null;
 
-type GoogleUser = {
-  email: string;
-  firstName: string;
-  lastName: string;
-};
-
 @Injectable()
 export class AuthService {
+  oauthClient: OAuth2Client;
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-  ) {}
+  ) {
+    this.oauthClient = new OAuth2Client(
+      process.env.GOOGLE_CLIENT_ID,
+      process.env.GOOGLE_SECRET,
+    );
+  }
 
   async validateUser(email: string, password: string): Promise<UserOrNull> {
     const user = await this.usersService.findOneWithPasswordByEmail(email);
@@ -70,27 +72,36 @@ export class AuthService {
     return regexp.test(email);
   }
 
-  async googleLogin(req: { user: any | undefined }) {
-    if (!req.user) {
-      throw new InternalServerErrorException('No user from google');
-    }
-    const googleUser = req.user as GoogleUser;
-
-    let user = undefined;
-    try {
-      user = await this.usersService.findOneByEmail(googleUser.email);
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        const registerDto: RegisterDto = {
-          email: googleUser.email,
-          name: `${googleUser.firstName} ${googleUser.lastName}`,
-          password: '',
-        };
-        user = await this.usersService.create(registerDto);
-      } else {
-        throw new InternalServerErrorException();
+  async validateGoogleAccount(googleDto: GoogleDto): Promise<User> {
+    const ticket = await this.oauthClient.verifyIdToken({
+      idToken: googleDto.token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    if (payload) {
+      const googleUser = { email: payload['email'], name: payload['name'] };
+      let user: User;
+      try {
+        user = await this.usersService.findOneByEmail(googleUser.email);
+      } catch (error) {
+        if (error instanceof NotFoundException) {
+          const registerDto: RegisterDto = {
+            email: googleUser.email,
+            name: googleUser.name,
+            password: '',
+          };
+          user = await this.usersService.create(registerDto);
+        } else {
+          throw new ForbiddenException();
+        }
       }
+      return user;
     }
+    throw new ForbiddenException();
+  }
+
+  async googleLogin(googleDto: GoogleDto) {
+    const user = await this.validateGoogleAccount(googleDto);
 
     const payload = { userId: user.id, userEmail: user.email };
 
