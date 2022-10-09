@@ -1,6 +1,7 @@
 import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
+import { GoogleDto } from './dto/google.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 
@@ -20,5 +21,10 @@ export class AuthController {
       throw new BadRequestException('Email invalid!');
     }
     return await this.authService.register(registerDto);
+  }
+
+  @Post('google')
+  async googleAuth(@Body() googleDto: GoogleDto) {
+    return await this.authService.googleLogin(googleDto);
   }
 }
