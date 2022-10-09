@@ -13,6 +13,9 @@ import { Like } from './likes/entities/like.entity';
 import { LikesModule } from './likes/likes.module';
 import { CommentsModule } from './comments/comments.module';
 import { Comment } from './comments/entities/comment.entity';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { GoogleStrategy } from './google.strategy'
 
 @Module({
   imports: [
@@ -36,5 +39,7 @@ import { Comment } from './comments/entities/comment.entity';
   ],
   providers: [EventsGateway],
   exports: [EventsGateway],
+  controllers: [AppController],
+  providers: [AppService, GoogleStrategy],
 })
 export class AppModule {}
