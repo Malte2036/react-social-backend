@@ -33,3 +33,14 @@ $ npm run start:prod
 - [NestJs](https://nestjs.com/)
 - [TypeORM](https://github.com/typeorm/typeorm)
 - [Swagger](https://swagger.io/)
+
+## Contributors🌟
+<br>
+
+<div align="center">
+<a href="https://github.com/Malte2036/react-social-backend/graphs/contributors">
+
+  <img src="https://contrib.rocks/image?repo=Malte2036/react-social-backend&&max=817" />
+
+</a>
+</div>
