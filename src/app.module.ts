@@ -19,7 +19,7 @@ import { Comment } from './comments/entities/comment.entity';
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mariadb',
-      host: 'localhost',
+      host: process.env.MARIADB_HOST ?? 'localhost',
       port: 3306,
       username: 'root',
       password: process.env.MARIADB_ROOT_PASSWORD,
